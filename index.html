@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Life RPG</title>
+  <style>
+    body {
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        min-height: 100vh;
+        background-color: #1e1e2f;
+        font-family: 'Segoe UI', monospace;
+        color: #f1f1f1;
+        padding-top: 30px;
+    }
+    
+    /* TITLE */
+    #title {
+        font-size: 36px;
+        padding: 15px 25px;
+        margin-bottom: 40px;
+        border-radius: 20px;
+        background: linear-gradient(to right, #00c9ff, #92fe9d);
+        color: black;
+        font-weight: bold;
+        box-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
+        transition: transform 0.3s ease;
+    }
+    #title:hover {
+        transform: scale(1.05);
+    }
+    
+    /* PLAYER INFO */
+    #player-info {
+        width: 500px;
+        padding: 25px;
+        background-color: #2b2d42;
+        border-radius: 20px;
+        font-size: 22px;
+        text-align: center;
+        box-shadow: 0 0 10px rgba(0,255,255,0.3);
+    }
+    #player-info-title {
+        font-size: 36px;
+        margin-bottom: 10px;
+        color: #00c9ff;
+    }
+    
+    /* BUTTONS */
+    .btn {
+        width: 400px;
+        height: 65px;
+        margin-top: 20px;
+        border: none;
+        border-radius: 15px;
+        font-size: 22px;
+        background: linear-gradient(to right, #00c9ff, #92fe9d);
+        color: black;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 0 12px rgba(0,255,255,0.3);
+    }
+    .btn:hover {
+        transform: scale(1.03);
+        background: linear-gradient(to right, #00b3e6, #7ce38b);
+    }
+    
+    /* MODALS */
+    #quests fieldset,
+    #store fieldset {
+        display: none;
+        position: absolute;
+        top: 140px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 520px;
+        font-size: 20px;
+        background-color: #2b2d42;
+        border: 2px solid #00c9ff;
+        border-radius: 20px;
+        padding: 25px;
+        z-index: 10;
+        box-shadow: 0 0 20px rgba(0,255,255,0.4);
+        color: white;
+    }
+    legend {
+        font-size: 28px;
+        background-color: #00c9ff;
+        color: black;
+        border-radius: 10px;
+        padding: 5px 10px;
+        font-weight: bold;
+    }
+    
+    /* CLOSE BUTTON */
+    .close-btn {
+        position: absolute;
+        top: 10px;
+        right: 25px;
+        border: none;
+        background-color: red;
+        color: white;
+        font-size: 18px;
+        font-weight: bold;
+        border-radius: 8px;
+        padding: 4px 8px;
+        cursor: pointer;
+    }
+    .close-btn:hover {
+        background-color: darkred;
+    }
+    
+    /* EXP BAR */
+    #player-exp-progress-bar {
+        width: 100%;
+        height: 25px;
+        background-color: #444;
+        border: 2px solid #00c9ff;
+        border-radius: 10px;
+        overflow: hidden;
+        margin-top: 10px;
+    }
+    #player-exp-progress {
+        height: 100%;
+        width: 0%;
+        background: linear-gradient(to right, #00d2ff, #3a47d5);
+        transition: width 0.4s ease;
+    }
+    
+    /* INVENTORY */
+    #inventory {
+        margin-top: 25px;
+        width: 500px;
+    }
+    #inventory-list {
+        list-style-type: none;
+        padding: 0;
+    }
+    #inventory-list li {
+        padding: 10px;
+        background-color: #3c3f58;
+        margin-bottom: 8px;
+        border-radius: 10px;
+        color: white;
+        transition: transform 0.2s ease, background-color 0.2s ease;
+    }
+    #inventory-list li:hover {
+        transform: scale(1.05);
+        cursor: pointer;
+        background-color: #50546e;
+    }
+    
+    /* TODO SECTION */
+    #todo-section {
+        width: 450px;
+        margin-top: 30px;
+        padding: 25px;
+        background-color: #2b2d42;
+        border-radius: 20px;
+        box-shadow: 0 0 15px rgba(0,255,255,0.3);
+    }
+    #todo-section h2 {
+        margin-bottom: 15px;
+        text-align: center;
+        font-size: 26px;
+        color: #00c9ff;
+    }
+    #todo-input {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 15px;
+    }
+    #new-todo {
+        flex: 1;
+        padding: 10px;
+        font-size: 16px;
+        border-radius: 10px;
+        border: 1px solid #ccc;
+        margin-right: 10px;
+    }
+    #todo-input button {
+        padding: 10px 15px;
+        font-size: 16px;
+        background: linear-gradient(to right, #00c9ff, #92fe9d);
+        color: black;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+    #todo-input button:hover {
+        transform: scale(1.05);
+    }
+    #todo-list {
+        list-style-type: none;
+        padding: 0;
+    }
+    #todo-list li {
+        background-color: #3c3f58;
+        padding: 10px;
+        margin-bottom: 10px;
+        border-left: 5px solid #00c9ff;
+        border-radius: 10px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    #todo-list li button {
+        background-color: #00c9ff;
+        color: black;
+        border: none;
+        padding: 6px 12px;
+        font-size: 14px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: bold;
+    }
+    #todo-list li button:hover {
+        background-color: #00b3e6;
+    }
+    /* 애니메이션 정의 */
+    @keyframes popupFadeIn {
+        0% {
+        opacity: 0;
+        transform: translate(-50%, -20%) scale(0.8);
+        }
+        100% {
+        opacity: 1;
+        transform: translate(-50%, 0) scale(1);
+        }
+    }
+    
+    /* 팝업창 기본 숨김 */
+    #quests fieldset,
+    #store fieldset {
+        display: none;
+        position: absolute;
+        top: 150px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 500px;
+        font-size: 20px;
+        border-radius: 15px;
+        padding: 20px;
+        z-index: 10;
+        box-shadow: 0 0 10px black;
+        opacity: 0;
+    }
+    
+    /* 보일 때 애니메이션 적용 */
+    #quests.show fieldset,
+    #store.show fieldset {
+        display: block;
+        animation: popupFadeIn 0.3s ease forwards;
+    }
+
+    #save-btn,
+    #load-btn {
+        width: 200px;
+        font-size: 20px;
+    }
+    
+  </style>
+</head>
+<body>
+  <h1 id="title">Life RPG</h1>
+
+  <div id="player-info">
+    <p id="player-info-title"><b>[Player Info]</b></p>
+    <p id="player-id-container">Player ID: <span id="player-id">박진원</span></p>
+    <p id="player-coin-container">Coins: <span id="player-coin">100</span></p>
+    <p id="player-level-container">Level: <span id="player-level">1</span></p>
+    <p id="player-exp-container">EXP: <span id="player-exp">0</span></p>
+    <div id="player-exp-progress-bar">
+      <div id="player-exp-progress"></div>
+    </div>
+  </div>
+
+  <div id="inventory">
+    <fieldset>
+      <legend>🎒 인벤토리</legend>
+      <ul id="inventory-list"></ul>
+    </fieldset>
+  </div>
+
+  <button class="btn" id="show-quests-btn" onclick="showQuests()">Show the Quests</button>
+  <button class="btn" id="open-store-btn" onclick="openStore()">Open the Store</button>
+
+  <div id="quests">
+    <fieldset>
+      <legend>Quests</legend>
+      <button class="close-btn" onclick="closeQuests()">✖</button>
+      <div id="quest-list">
+        <div class="quest" id="quest-1">
+          <p>Quest 1: <span id="quest1-content">(Quest Content)</span></p>
+          <button class="quest-button" id="quest-1-button">Start Quest</button>
+        </div>
+        <div class="quest" id="quest-2">
+          <p>Quest 2: <span id="quest2-content">(Quest Content)</span></p>
+          <button class="quest-button" id="quest-2-button">Start Quest</button>
+        </div>
+        <div class="quest" id="quest-3">
+          <p>Quest 3: <span id="quest3-content">(Quest Content)</span></p>
+          <button class="quest-button" id="quest-3-button">Start Quest</button>
+        </div>
+      </div>
+    </fieldset>
+  </div>
+
+  <div id="store">
+    <fieldset>
+      <legend>Store</legend>
+      <button class="close-btn" onclick="closeStore()">✖</button>
+      <div id="item-list">
+        <div class="item" id="item-1">
+          <p>Item 1: <span id="item1-content">(Item Content)</span></p>
+          <button class="item-button" id="item-1-button">Buy Item</button>
+        </div>
+        <div class="item" id="item-2">
+          <p>Item 2: <span id="item2-content">(Item Content)</span></p>
+          <button class="item-button" id="item-2-button">Buy Item</button>
+        </div>
+        <div class="item" id="item-3">
+          <p>Item 3: <span id="item3-content">(Item Content)</span></p>
+          <button class="item-button" id="item-3-button">Buy Item</button>
+        </div>
+      </div>
+    </fieldset>
+  </div>
+
+  <div id="todo-section">
+    <h2>📋 나의 To-Do 리스트</h2>
+    <div id="todo-input">
+      <input type="text" id="new-todo" placeholder="할 일을 입력하세요!" />
+      <button onclick="addTodo()">추가</button>
+    </div>
+    <ul id="todo-list"></ul>
+  </div>
+
+    <button class="btn" id="save-btn" onclick="saveGame()">게임 저장하기</button>
+    <button class="btn" id="load-btn" onclick="loadGame()">게임 불러오기</button>
+
+
+  <script>
+    // 글로벌 변수
+    let currentExp = 0;
+    let currentLevel = 1;
+    let maxExp = 100;
+    let inventory = ["핸드폰 자유 이용권 30분"];
+
+    // 퀘스트 목록
+    const quests = [
+        { id: 1, content: "공부 1시간 하기", reward: 20, coin: 10 },
+        { id: 2, content: "운동 30분 하기", reward: 20, coin: 10 },
+        { id: 3, content: "영어 단어장 Day 1개 외우기", reward: 40, coin: 20 },
+        { id: 4, content: "인강 1개 듣기(고등)", reward: 30, coin: 15 }
+    ];
+
+    // 아이템 목록
+    const items = [
+        { id: 1, content: "딴짓하기 15분(음악 듣기만 허용)", cost: 10 },
+        { id: 2, content: "핸드폰 자유 이용권 30분", cost: 30 },
+        { id: 3, content: "랜덤 보상 상자", cost: 40 },
+        { id: 4, content: "ㄱㄱ", cost: 100 },
+    ];
+
+    // UI 초기화
+    window.onload = function () {
+        updateExpBar(currentExp, maxExp);
+        updatePlayerInfo();
+        displayQuestsReward();
+        displayStoreItems();
+        updateInventory();
+    };
+
+    // 퀘스트 UI
+    function displayQuestsReward() {
+        const questList = document.getElementById("quest-list");
+        questList.innerHTML = "";
+        quests.forEach((quest) => {
+            const questDiv = document.createElement("div");
+            questDiv.className = "quest";
+            questDiv.id = `quest-${quest.id}`;
+
+            const questP = document.createElement("p");
+            questP.innerHTML = `Quest ${quest.id}: ${quest.content}<br><strong>🎁 보상: EXP ${quest.reward}, 코인 ${quest.coin}</strong>`;
+
+            const questBtn = document.createElement("button");
+            questBtn.textContent = "Complete!";
+            questBtn.className = "btn";  // 여기 추가!
+            questBtn.onclick = () => completeQuest(quest.id);
+
+            questDiv.appendChild(questP);
+            questDiv.appendChild(questBtn);
+            questList.appendChild(questDiv);
+        });
+    }
+
+    // 퀘스트 완료 처리
+    function completeQuest(id) {
+        const quest = quests.find((q) => q.id === id);
+        if (!quest) return;
+
+        alert(`퀘스트 완료! 경험치 ${quest.reward}점, 코인 ${quest.coin}개 획득! 🎉`);
+
+        gainExp(quest.reward);
+
+        const coinEl = document.getElementById("player-coin");
+        let coin = parseInt(coinEl.textContent);
+        coin += quest.coin;
+        coinEl.textContent = coin;
+    }
+
+    // 경험치 획득 및 레벨업 처리
+    function gainExp(amount) {
+        currentExp += amount;
+        while (currentExp >= maxExp) {
+            currentExp -= maxExp;
+            currentLevel++;
+            maxExp = Math.floor(maxExp * 1.2);
+            alert(`🎉 레벨업! 현재 레벨: ${currentLevel}`);
+        }
+        updateExpBar(currentExp, maxExp);
+        updatePlayerInfo();
+    }
+
+    // 상점 UI
+    function displayStoreItems() {
+        const itemList = document.getElementById("item-list");
+        itemList.innerHTML = "";
+        items.forEach((item) => {
+            const itemDiv = document.createElement("div");
+            itemDiv.className = "item";
+
+            const itemP = document.createElement("p");
+            itemP.innerHTML = `Item ${item.id}: ${item.content}<br><strong>💰 가격: ${item.cost} 코인</strong>`;
+
+            const itemBtn = document.createElement("button");
+            itemBtn.textContent = "Buy Item";
+            itemBtn.className = "btn";
+            itemBtn.onclick = () => buyItem(item.id);
+
+            itemDiv.appendChild(itemP);
+            itemDiv.appendChild(itemBtn);
+            itemList.appendChild(itemDiv);
+        });
+    }
+
+    // 아이템 구매 처리 + 인벤토리 추가
+    function buyItem(id) {
+        const item = items.find(i => i.id === id);
+        const coinEl = document.getElementById("player-coin");
+        let coin = parseInt(coinEl.textContent);
+
+        if (coin < item.cost) {
+            alert("코인이 부족해! 😢");
+            return;
+        }
+
+        coin -= item.cost;
+        coinEl.textContent = coin;
+
+        // 인벤토리에 추가
+        inventory.push(item.content);
+        updateInventory();
+
+        alert(`✅ [${item.content}] 획득!`)
+    }
+
+    // 인벤토리 UI 갱신
+    function updateInventory() {
+        const list = document.getElementById("inventory-list");
+        list.innerHTML = "";
+        inventory.forEach((item, index) => {
+            const li = document.createElement("li");
+            li.textContent = item;
+
+            // 클릭 시 아이템 사용 처리
+            li.onclick = () => {
+                alert(`🧪 "${item}" 아이템 사용됨!`);
+                inventory.splice(index, 1); // 사용 후 인벤토리에서 제거
+                updateInventory(); // 새로고침
+            };
+
+            list.appendChild(li);
+        });
+        console.log(inventory);
+    }
+
+    // EXP 바 & 플레이어 정보 갱신
+    function updateExpBar(currentExp, maxExp) {
+        const percent = (currentExp / maxExp) * 100;
+        document.getElementById("player-exp-progress").style.width = `${percent}%`;
+    }
+
+    function updatePlayerInfo() {
+        document.getElementById("player-exp").textContent = `${currentExp}/${maxExp}`;
+        document.getElementById("player-level").textContent = currentLevel;
+    }
+
+    // 퀘스트/상점 토글
+    function showQuests() {
+        document.getElementById('quests').classList.add('show');
+    }
+    
+    function closeQuests() {
+        document.getElementById('quests').classList.remove('show');
+    }
+    
+    function openStore() {
+        document.getElementById('store').classList.add('show');
+    }
+    
+    function closeStore() {
+        document.getElementById('store').classList.remove('show');
+    }  
+
+
+
+    /** Todo 리스트 시스템 */
+    let todoList = []; // 할 일 목록
+
+    function addTodo() {
+        const input = document.getElementById("new-todo");
+        const value = input.value.trim();
+
+        if (value === "") {
+            alert("할 일을 입력하라고옹!! 😤");
+            return;
+        }
+
+        const todo = {
+            id: Date.now(), // 유니크 ID
+            text: value,
+            done: false
+        };
+
+        todoList.push(todo);
+        input.value = "";
+        renderTodoList();
+    }
+
+    function renderTodoList() {
+        const ul = document.getElementById("todo-list");
+        ul.innerHTML = "";
+
+        todoList.forEach(todo => {
+            const li = document.createElement("li");
+
+            const span = document.createElement("span");
+            span.textContent = todo.text;
+            if (todo.done) span.style.textDecoration = "line-through";
+
+            const btn = document.createElement("button");
+            btn.textContent = todo.done ? "완료됨" : "완료하기";
+            btn.disabled = todo.done;
+            btn.onclick = () => completeTodo(todo.id);
+
+            li.appendChild(span);
+            li.appendChild(btn);
+            ul.appendChild(li);
+        });
+    }
+
+    function completeTodo(id) {
+        const todo = todoList.find(t => t.id === id);
+        if (!todo || todo.done) return;
+
+        todo.done = true;
+        alert("✅ 할 일 완료! 보상으로 EXP 10, 코인 5를 받았어!");
+
+        // 경험치 & 코인 보상
+        gainExp(10);
+        const coinEl = document.getElementById("player-coin");
+        let coin = parseInt(coinEl.textContent);
+        coin += 5;
+        coinEl.textContent = coin;
+
+        renderTodoList();
+    }
+
+    function renderTodoList() { 
+    const ul = document.getElementById("todo-list");
+    ul.innerHTML = "";
+
+    todoList.forEach(todo => {
+        const li = document.createElement("li");
+
+        const span = document.createElement("span");
+        span.textContent = todo.text;
+        if (todo.done) span.style.textDecoration = "line-through";
+
+        // 완료 버튼
+        const doneBtn = document.createElement("button");
+        doneBtn.textContent = todo.done ? "완료됨" : "완료하기";
+        doneBtn.disabled = todo.done;
+        doneBtn.onclick = () => completeTodo(todo.id);
+
+        // 삭제 버튼
+        const delBtn = document.createElement("button");
+        delBtn.textContent = "삭제";
+        delBtn.style.marginLeft = "8px";
+        delBtn.onclick = () => {
+            todoList = todoList.filter(t => t.id !== todo.id);
+            renderTodoList();
+        };
+
+        li.appendChild(span);
+        li.appendChild(doneBtn);
+        li.appendChild(delBtn);
+        ul.appendChild(li);
+    });
+}
+
+    function deleteTodo(id) {
+        todoList = todoList.filter(todo => todo.id !== id);
+        renderTodoList();
+    }
+
+    // 저장하기
+    function saveGame() {
+    const saveData = {
+        exp: currentExp,
+        level: currentLevel,
+        maxExp: maxExp,
+        coin: parseInt(document.getElementById("player-coin").textContent),
+        inventory: inventory,
+        todoList: todoList
+    };
+    localStorage.setItem("lifeRPG_save", JSON.stringify(saveData));
+    alert("게임 저장 완료! 🐲");
+    }
+
+    // 불러오기
+    function loadGame() {
+    const saved = localStorage.getItem("lifeRPG_save");
+    if (!saved) {
+        alert("저장된 데이터가 없어! 😭");
+        return;
+    }
+    const data = JSON.parse(saved);
+
+    currentExp = data.exp;
+    currentLevel = data.level;
+    maxExp = data.maxExp;
+    document.getElementById("player-coin").textContent = data.coin;
+    inventory = data.inventory;
+    todoList = data.todoList;
+
+    updateExpBar(currentExp, maxExp);
+    updatePlayerInfo();
+    updateInventory();
+    renderTodoList();
+
+    alert("게임 불러오기 완료! 🚀");
+    }
+  </script>
+</body>
+</html>

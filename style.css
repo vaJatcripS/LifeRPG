@@ -1,0 +1,255 @@
+/* RESET */
+body {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    min-height: 100vh;
+    background-color: #1e1e2f;
+    font-family: 'Segoe UI', monospace;
+    color: #f1f1f1;
+    padding-top: 30px;
+  }
+  
+  /* TITLE */
+  #title {
+    font-size: 36px;
+    padding: 15px 25px;
+    margin-bottom: 40px;
+    border-radius: 20px;
+    background: linear-gradient(to right, #00c9ff, #92fe9d);
+    color: black;
+    font-weight: bold;
+    box-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
+    transition: transform 0.3s ease;
+  }
+  #title:hover {
+    transform: scale(1.05);
+  }
+  
+  /* PLAYER INFO */
+  #player-info {
+    width: 500px;
+    padding: 25px;
+    background-color: #2b2d42;
+    border-radius: 20px;
+    font-size: 22px;
+    text-align: center;
+    box-shadow: 0 0 10px rgba(0,255,255,0.3);
+  }
+  #player-info-title {
+    font-size: 36px;
+    margin-bottom: 10px;
+    color: #00c9ff;
+  }
+  
+  /* BUTTONS */
+  .btn {
+    width: 400px;
+    height: 65px;
+    margin-top: 20px;
+    border: none;
+    border-radius: 15px;
+    font-size: 22px;
+    background: linear-gradient(to right, #00c9ff, #92fe9d);
+    color: black;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 12px rgba(0,255,255,0.3);
+  }
+  .btn:hover {
+    transform: scale(1.03);
+    background: linear-gradient(to right, #00b3e6, #7ce38b);
+  }
+  
+  /* MODALS */
+  #quests fieldset,
+  #store fieldset {
+    display: none;
+    position: absolute;
+    top: 140px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 520px;
+    font-size: 20px;
+    background-color: #2b2d42;
+    border: 2px solid #00c9ff;
+    border-radius: 20px;
+    padding: 25px;
+    z-index: 10;
+    box-shadow: 0 0 20px rgba(0,255,255,0.4);
+    color: white;
+  }
+  legend {
+    font-size: 28px;
+    background-color: #00c9ff;
+    color: black;
+    border-radius: 10px;
+    padding: 5px 10px;
+    font-weight: bold;
+  }
+  
+  /* CLOSE BUTTON */
+  .close-btn {
+    position: absolute;
+    top: 10px;
+    right: 25px;
+    border: none;
+    background-color: red;
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+    border-radius: 8px;
+    padding: 4px 8px;
+    cursor: pointer;
+  }
+  .close-btn:hover {
+    background-color: darkred;
+  }
+  
+  /* EXP BAR */
+  #player-exp-progress-bar {
+    width: 100%;
+    height: 25px;
+    background-color: #444;
+    border: 2px solid #00c9ff;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-top: 10px;
+  }
+  #player-exp-progress {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(to right, #00d2ff, #3a47d5);
+    transition: width 0.4s ease;
+  }
+  
+  /* INVENTORY */
+  #inventory {
+    margin-top: 25px;
+    width: 500px;
+  }
+  #inventory-list {
+    list-style-type: none;
+    padding: 0;
+  }
+  #inventory-list li {
+    padding: 10px;
+    background-color: #3c3f58;
+    margin-bottom: 8px;
+    border-radius: 10px;
+    color: white;
+    transition: transform 0.2s ease, background-color 0.2s ease;
+  }
+  #inventory-list li:hover {
+    transform: scale(1.05);
+    cursor: pointer;
+    background-color: #50546e;
+  }
+  
+  /* TODO SECTION */
+  #todo-section {
+    width: 450px;
+    margin-top: 30px;
+    padding: 25px;
+    background-color: #2b2d42;
+    border-radius: 20px;
+    box-shadow: 0 0 15px rgba(0,255,255,0.3);
+  }
+  #todo-section h2 {
+    margin-bottom: 15px;
+    text-align: center;
+    font-size: 26px;
+    color: #00c9ff;
+  }
+  #todo-input {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+  }
+  #new-todo {
+    flex: 1;
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    margin-right: 10px;
+  }
+  #todo-input button {
+    padding: 10px 15px;
+    font-size: 16px;
+    background: linear-gradient(to right, #00c9ff, #92fe9d);
+    color: black;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  #todo-input button:hover {
+    transform: scale(1.05);
+  }
+  #todo-list {
+    list-style-type: none;
+    padding: 0;
+  }
+  #todo-list li {
+    background-color: #3c3f58;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-left: 5px solid #00c9ff;
+    border-radius: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  #todo-list li button {
+    background-color: #00c9ff;
+    color: black;
+    border: none;
+    padding: 6px 12px;
+    font-size: 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+  }
+  #todo-list li button:hover {
+    background-color: #00b3e6;
+  }
+/* 애니메이션 정의 */
+@keyframes popupFadeIn {
+    0% {
+      opacity: 0;
+      transform: translate(-50%, -20%) scale(0.8);
+    }
+    100% {
+      opacity: 1;
+      transform: translate(-50%, 0) scale(1);
+    }
+  }
+  
+  /* 팝업창 기본 숨김 */
+  #quests fieldset,
+  #store fieldset {
+      display: none;
+      position: absolute;
+      top: 150px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 500px;
+      font-size: 20px;
+      border-radius: 15px;
+      padding: 20px;
+      z-index: 10;
+      box-shadow: 0 0 10px black;
+      opacity: 0;
+  }
+  
+  /* 보일 때 애니메이션 적용 */
+  #quests.show fieldset,
+  #store.show fieldset {
+      display: block;
+      animation: popupFadeIn 0.3s ease forwards;
+  }
